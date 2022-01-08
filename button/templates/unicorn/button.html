@@ -1,0 +1,49 @@
+<div class="container">
+
+    <div>
+        <form method="post" unicorn:submit.prevent="calculate">
+            {% csrf_token %}
+            <label for="savingPeriodLabel">Срок вклада (лет)</label>
+            <input id="savingPeriodLabel" class="calc-options__input"
+                        type="number" name="input" min="0" max="50"
+                        unicorn:model.defer="interval">
+
+            <label for="initialBalanceLabel">Размер вклада</label>
+            <input id="initialBalanceLabel" class="calc-options__input"
+                       type="number" name="input" min="0" max="1000000"
+                       unicorn:model.defer="amount"><br><br>
+
+            <label for="percentYieldLabel">Процентная ставка</label>
+            <input id="percentYieldLabel" class="calc-options__input"
+                       type="number" name="input" min="0" max="100" step="0.1"
+                       unicorn:model.defer="percent">
+
+            <label for="monthlyContributionLabel">Ежемесячная прибавка</label>
+            <input id="monthlyContributionLabel" class="calc-options__input"
+                       type="number" name="input" min="0" max="500000"
+                       unicorn:model.defer="add"><br><br>
+
+            <label for="taxRateLabel">Налог (в %)</label>
+            <input id="taxRateLabel" class="calc-options__input"
+                       type="number" name="input" min="0" max="100" step="0.1"
+                       unicorn:model.defer="tax"><br><br>
+
+            <button class="btn btn-secondary" style="min-width: 100%;"
+                       unicorn:click="calculate">Расчитать</button>
+        </form>
+    </div>
+
+    <div>
+        {% if total %}
+        За период в <b>{{interval}}</b> лет при первоначальном взносе <b>{{amount}}</b>
+        и ежемесячной прибавке <b>{{addition}}</b><br>
+        под <b>{{percent}}</b> процентов годовых, с учетом налога в <b>{{tax}} %</b><br>
+        Инвестиции: <b>{{invest|floatformat}}</b><br>
+        Налоги: <b>{{total_taxes|floatformat}}</b><br>
+        Итоговая сумма: <b>{{total|floatformat}}</b><br>
+        {% else %}
+        Нажмите "Расчитать" для получения итоговой суммы
+        {% endif %}
+    </div>
+
+</div>

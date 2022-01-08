@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load unicorn %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Difficult percent</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+    />
+{% unicorn_scripts %}
+</head>
+<body>
+{% csrf_token %}
+
+<div class="container">
+    Вход
+</div>
+
+<div class="container">
+    <h2>Сложный процент</h2>
+    <p>Сложный процент часто используется в сфере инвестиций. Но посчитать выгоду не так-то просто. </p>
+    <p>Калькулятор сложных процентов сделает это за Вас.</p>
+</div>
+
+<div><p>{% unicorn 'button' %}</p></div>
+
+</body>
+</html>
+
+
