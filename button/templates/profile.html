@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Профиль</title>
+	</head>
+	
+	<body>
+
+		<div>
+		{% if user.is_authenticated %}
+		<p>Вы вошли как {{ user }}</p>
+		<a href="/accounts/password_reset/">Сменить пароль</a><br>
+		<a href="{% url 'logout' %}">Выйти</a><br>
+		{% else %}
+		<a href="{% url 'login' %}">Войти</a>
+		{% endif %}
+		<p>МОЙ ПРОФИЛЬ!</p>
+		</div>
+
+		<div>
+
+		</div>
+
+	</body>
+	
+</html>

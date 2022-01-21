@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -126,9 +126,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if DEBUG:
+'''if DEBUG:
     import mimetypes
-    mimetypes.add_type("application/javascript", ".js", True)
+    mimetypes.add_type("application/javascript", ".js", True)'''
 
 UNICORN = {
     "MINIFIED": True,
@@ -139,3 +139,9 @@ UNICORN = {
     },
     "CACHE_ALIAS": "default",
 }
+
+LOGIN_REDIRECT_URL = "/accounts/profile/"
+
+LOGOUT_REDIRECT_URL = "/"
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

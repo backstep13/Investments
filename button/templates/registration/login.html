@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Вход</title>
+	</head>
+	
+	<body>
+		
+		<h3>Введите логин и пароль</h3>
+		{% if user.is_authenticated %}
+		<p>Вы уже выполнили вход</p>
+		<p><a href="{% url 'profile' %}">Профиль</a></p>
+		{% else %}
+		<div>
+			<form method="post">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<input type="hidden" name="next" value="{{next}}">
+			<input type="submit" value="Войти">
+			<a href="{% url 'register' %}">Регистрация</a>
+			</form>	
+		</div>
+		{% endif %}
+	</body>
+	
+</html>

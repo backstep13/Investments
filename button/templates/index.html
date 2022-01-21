@@ -17,7 +17,12 @@
 {% csrf_token %}
 
 <div class="container">
-    Вход
+    {% if user.is_authenticated %}
+    <p>Вы вошли как {{ user }}</p>
+    <a href="{% url 'logout' %}">Выйти</a>
+    {% else %}
+    <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
 </div>
 
 <div class="container">

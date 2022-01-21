@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Регистрация</title>
+	</head>
+	
+	<body>
+		
+		<h3>Введите данные</h3>
+		<div>
+			<form action="." method="post">
+			{% csrf_token %}
+			{{ user_form.as_p }}
+			<input type="submit" value="Зарегистрировать">
+			</form>	
+		</div>
+
+	</body>
+	
+</html>
