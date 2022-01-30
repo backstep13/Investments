@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import Investment, Investor
+
 
 class UserRegistrationForm(forms.ModelForm):
 	password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
@@ -15,3 +17,17 @@ class UserRegistrationForm(forms.ModelForm):
 		if cd['password'] != cd['password2']:
 			raise forms.ValidationError('Password don\'t match')
 		return cd['password2']
+
+
+class InvestmentForm(forms.ModelForm):
+	class Meta:
+		model = Investment
+		exclude = ('investor', 'back')
+		fields = ('i_type', 'interval', 'amount', 'percent')
+
+
+class InvestorForm(forms.ModelForm):
+	class Meta:
+		model = Investor
+		exclude = ('investor', )
+		fields = ('account', )

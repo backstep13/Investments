@@ -20,6 +20,7 @@
     {% if user.is_authenticated %}
     <p>Вы вошли как {{ user }}</p>
     <a href="{% url 'logout' %}">Выйти</a>
+    <a href="{% url 'profile' %}">Профиль</a>
     {% else %}
     <a href="{% url 'login' %}">Войти</a>
     {% endif %}

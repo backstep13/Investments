@@ -1,8 +1,10 @@
 <!DOCTYPE html>
+
 <html>
 
 	<head>
 		<title>Профиль</title>
+
 	</head>
 	
 	<body>
@@ -15,11 +17,28 @@
 		{% else %}
 		<a href="{% url 'login' %}">Войти</a>
 		{% endif %}
-		<p>МОЙ ПРОФИЛЬ!</p>
 		</div>
 
 		<div>
+			{% if user.is_authenticated %}
+			<div>
+				<p>На счету: {{ investor.account }} $ <a href="{% url 'account' %}">Изменить</a></p><br>
+				<a href="{% url 'add' %}">Добавить инвестицию</a>
+			</div>
 
+			<div>
+				{% for i in context %}
+				#{{ i.id }} ... {{ i.i_type }} ...
+				на {{ i.interval }} месяцев ... {{ i.amount }} USD ... под {{ i.percent }} %
+				<button>Вернуть</button>
+				<button>Удалить</button><hr>
+				{% empty %}
+				У Вас еще нет инвестиций
+				{% endfor %}<br>
+				<strong> Всего инвестировано: {{ investor.total_invest }} USD</strong><br>
+				<strong> Прибыль от инестиций: {{ investor.profit }} USD</strong>
+			</div>
+			{% endif %}
 		</div>
 
 	</body>

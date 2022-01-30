@@ -126,9 +126,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-'''if DEBUG:
+if DEBUG:
     import mimetypes
-    mimetypes.add_type("application/javascript", ".js", True)'''
+    mimetypes.add_type("application/javascript", ".js", True)
 
 UNICORN = {
     "MINIFIED": True,
