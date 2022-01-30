@@ -11,5 +11,7 @@ urlpatterns = [
     path('accounts/profile/', views.profile, name="profile"),
     path('accounts/register/', views.register, name="register"),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('api/investor/<int:pk>/', views.api_investor),
+    path('api/investments/<int:pk>/', views.api_investment)
 ]

@@ -29,5 +29,5 @@ class InvestmentForm(forms.ModelForm):
 class InvestorForm(forms.ModelForm):
 	class Meta:
 		model = Investor
-		exclude = ('investor', )
+		exclude = ('investor', 'total_invest', 'profit')
 		fields = ('account', )
