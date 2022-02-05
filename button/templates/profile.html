@@ -1,46 +1,46 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}
+Личный кабинет
+{% endblock %}		
+ 		
+{% block content %}
+<div>
+	<a href="{% url 'index' %}">Главная</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">Выйти</a>
+	<a href="/accounts/password_reset/">Сменить пароль</a>
+	<p>Вы вошли как <strong> {{ user }} </strong></p>
+    {% else %}
+    <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+	{% if user.is_authenticated %}
+	<div>
+		<p>На счету: {{ investor.account }} $ <a href="{% url 'account' investor.pk %}">Изменить</a></p><br>
+		<a href="{% url 'add' %}">Добавить инвестицию</a>
+	</div>
 
-<html>
-
-	<head>
-		<title>Профиль</title>
-
-	</head>
-	
-	<body>
-
-		<div>
-		{% if user.is_authenticated %}
-		<p>Вы вошли как {{ user }}</p>
-		<a href="/accounts/password_reset/">Сменить пароль</a><br>
-		<a href="{% url 'logout' %}">Выйти</a><br>
-		{% else %}
-		<a href="{% url 'login' %}">Войти</a>
+	<div>
+		{% for i in context %}
+		{{ i.i_type }} ...
+		на {{ i.interval }} месяцев ...
+		{{ i.amount }} USD  ...
+		под {{ i.percent }} % ...
+		{% if i.status %} 
+		<form method="post" action="{% url 'back' i.id %}">
+			{% csrf_token %}
+			<button>Вернуть</button>
+		</form>
+				
+		<form method="post" action="{% url 'del' i.id %}">
+			{% csrf_token %}
+			<button>Удалить</button>
+		</form>{% endif %}<hr>
+		{% empty %}
+		У Вас еще нет инвестиций
+		{% endfor %}<br>
+		<strong> Всего инвестировано: {{ investor.total_invest }} USD</strong><br>
+		<strong> Прибыль от инестиций: {{ investor.profit }} USD</strong>
+	</div>
 		{% endif %}
-		</div>
-
-		<div>
-			{% if user.is_authenticated %}
-			<div>
-				<p>На счету: {{ investor.account }} $ <a href="{% url 'account' %}">Изменить</a></p><br>
-				<a href="{% url 'add' %}">Добавить инвестицию</a>
-			</div>
-
-			<div>
-				{% for i in context %}
-				#{{ i.id }} ... {{ i.i_type }} ...
-				на {{ i.interval }} месяцев ... {{ i.amount }} USD ... под {{ i.percent }} %
-				<button>Вернуть</button>
-				<button>Удалить</button><hr>
-				{% empty %}
-				У Вас еще нет инвестиций
-				{% endfor %}<br>
-				<strong> Всего инвестировано: {{ investor.total_invest }} USD</strong><br>
-				<strong> Прибыль от инестиций: {{ investor.profit }} USD</strong>
-			</div>
-			{% endif %}
-		</div>
-
-	</body>
-	
-</html>
+</div>
+{% endblock %}

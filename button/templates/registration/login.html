@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html>
-
-	<head>
-		<title>Вход</title>
-	</head>
-	
-	<body>
+{% extends 'base.html' %}
+{% block title %}
+Вход
+{% endblock %}
+{% block content %}
 		
 		<h3>Введите логин и пароль</h3>
 		{% if user.is_authenticated %}
@@ -22,6 +19,4 @@
 			</form>	
 		</div>
 		{% endif %}
-	</body>
-	
-</html>
+{% endblock %}

@@ -1,15 +1,14 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
 
 	<head>
-		<title>Вы зарегистрированы</title>
+		<title>Завершение регистрации</title>
 	</head>
 	
 	<body>
 		
-		<p>Вы зарегистрированы</p>
-		<a href="/accounts/profile/">Войти</a>
+		<p>Вы зарегистрированы как {{ new_user }}</p>
+		<a href="{% url 'login' %}">Войти</a>
 
 	</body>
 	

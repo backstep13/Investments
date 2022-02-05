@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Вернуть инвестицию</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    Сумма к возврату: {{ form.back }}
+    <button type="submit">Вернуть</button>
+</form>
+</body>
+</html>
