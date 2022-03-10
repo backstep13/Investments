@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 
 class Investor(models.Model):
+    """Data about users-investors, controlling of their money"""
     investor = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE, default=1)
     account = models.PositiveIntegerField(default=0)
     total_invest = models.PositiveIntegerField(default=0)
@@ -10,6 +11,7 @@ class Investor(models.Model):
 
 
 class Investment(models.Model):
+    """Data of every investment which investor has done"""
     KIND = (
         ('deposit', 'Deposit'),
         ('bond', 'Bond'),
@@ -25,12 +27,14 @@ class Investment(models.Model):
     status = models.BooleanField(default=True)
 
     def cancel_inv(self, *args, **kwargs):
+        """Function change money amount of the investor if he delete investment"""
         acc = Investor.objects.get(investor=self.investor)
         acc.account += self.amount
         acc.total_invest -= self.amount
         acc.save()
 
     def save_inv(self, *args, **kwargs):
+        """Function change money amount of the investor if he create investment"""
         acc = Investor.objects.get(investor=self.investor)
         if acc.account >= self.amount:
             acc.account -= self.amount
@@ -38,6 +42,7 @@ class Investment(models.Model):
             acc.save()
 
     def back_inv(self, *args, **kwargs):
+        """Function change money amount of the investor if he close investment"""
         acc = Investor.objects.get(investor=self.investor)
         acc.account += self.back
         acc.profit += (self.back - self.amount)

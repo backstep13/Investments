@@ -4,12 +4,14 @@ from .models import Investment, Investor
 
 
 class InvestmentSerializer(serializers.ModelSerializer):
+    """Serializing all the data of Investment model"""
     class Meta:
         model = Investment
-        fields = ("investor", "i_type", "interval", "amount", "percent")
+        fields = '__all__'
 
 
 class InvestorSerializer(serializers.ModelSerializer):
+    """Serializing all the data of Investor model"""
     class Meta:
         model = Investor
-        fields = ("investor", "account", "total_invest", "profit")
+        fields = '__all__'

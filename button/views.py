@@ -1,27 +1,35 @@
 from django.shortcuts import render, redirect
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 from .forms import UserRegistrationForm, InvestmentForm, InvestorForm, BackForm
 from .models import Investment, Investor
-from .serializers import InvestmentSerializer, InvestorSerializer
+from .serializers import InvestmentSerializer
 
 
 def index(request):
+    """Start page"""
     return render(request, "index.html")
 
 
 def profile(request):
-    context = Investment.objects.filter(investor=request.user.id)
-    investor = Investor.objects.get(investor=request.user.id)
-    return render(request, "profile.html", {'context': context, 'investor': investor})
+    """If user is authenticated show him a profile page
+    else start page"""
+    if request.user.id is not None:
+        context = Investment.objects.filter(investor=request.user.id)
+        investor = Investor.objects.get(investor=request.user.id)
+        return render(request, "profile.html", {'context': context, 'investor': investor})
+    else:
+        return redirect('index')
 
 
 def del_investment(request, pk):
+    """Delete investment by the user"""
     inv = Investment.objects.get(pk=pk)
     inv.cancel_inv()
     inv.delete()
@@ -29,6 +37,7 @@ def del_investment(request, pk):
 
 
 def register(request):
+    """User Registration"""
     user_form = UserRegistrationForm(request.POST)
 
     if user_form.is_valid():
@@ -44,6 +53,7 @@ def register(request):
 
 
 def add_view(request):
+    """Function add investment to DB from special form"""
     if request.method == 'POST':
         form = InvestmentForm(request.POST)
         if form.is_valid():
@@ -63,6 +73,8 @@ def add_view(request):
 
 
 def back_view(request, pk):
+    """Function changes status of investment if it closed,
+    from special form """
     if request.method == 'POST':
         form = BackForm(request.POST)
         if form.is_valid():
@@ -74,10 +86,12 @@ def back_view(request, pk):
             return redirect('profile')
     else:
         form = BackForm
-    return render(request, 'back.html', {'form':form})
+    return render(request, 'back.html', {'form': form})
 
 
 class AccountUpdateView(UpdateView):
+    """Class help to change of money amount of the investor
+     from special form"""
     template_name = 'account.html'
     form_class = InvestorForm
     model = Investor
@@ -88,16 +102,18 @@ class AccountUpdateView(UpdateView):
         return super(AccountUpdateView, self).form_valid(form)
 
 
-@api_view(['GET'])
-def api_investment(request, pk):
-    if request.method == 'GET':
-        investment = Investment.objects.filter(investor=pk)
-        serializer = InvestmentSerializer(investment, many=True)
-        return Response(serializer.data)
+# API classes
+class APIInvestment(ModelViewSet):
+    """API for get, post, put, delete methods.
+    Work with JSON data, have filters, search, ordering and perm."""
+    serializer_class = InvestmentSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_fields = ['amount']
+    search_fields = ['interval', 'percent']
+    ordering_fields = ['percent', 'amount']
+    permission_classes = [IsAuthenticated]
 
-
-class APIInvestor(APIView):
-    def get(self, request, pk):
-        investor = Investor.objects.get(investor=pk)
-        serializer = InvestorSerializer(investor)
-        return Response(serializer.data)
+    def get_queryset(self):
+        """Permission for authenticated users"""
+        user = self.request.user
+        return Investment.objects.filter(investor=user)
