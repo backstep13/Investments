@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.views.generic.edit import UpdateView
+from django.views.generic import TemplateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,28 +13,9 @@ from .models import Investment, Investor
 from .serializers import InvestmentSerializer
 
 
-def index(request):
+class Index(TemplateView):
     """Start page"""
-    return render(request, "index.html")
-
-
-def profile(request):
-    """If user is authenticated show him a profile page
-    else start page"""
-    if request.user.id is not None:
-        context = Investment.objects.filter(investor=request.user.id)
-        investor = Investor.objects.get(investor=request.user.id)
-        return render(request, "profile.html", {'context': context, 'investor': investor})
-    else:
-        return redirect('index')
-
-
-def del_investment(request, pk):
-    """Delete investment by the user"""
-    inv = Investment.objects.get(pk=pk)
-    inv.cancel_inv()
-    inv.delete()
-    return redirect('profile')
+    template_name = 'index.html'
 
 
 def register(request):
@@ -52,41 +34,68 @@ def register(request):
     return render(request, "registration/register.html", {'user_form': user_form})
 
 
-def add_view(request):
-    """Function add investment to DB from special form"""
-    if request.method == 'POST':
-        form = InvestmentForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            inv = Investment()
-            inv.investor = user
-            inv.i_type = form.cleaned_data['i_type']
-            inv.interval = form.cleaned_data['interval']
-            inv.amount = form.cleaned_data['amount']
-            inv.percent = form.cleaned_data['percent']
-            inv.save()
-            inv.save_inv()
-            return redirect('profile')
-    else:
-        form = InvestmentForm
-    return render(request, 'add.html', {'form': form})
+class Profile(TemplateView):
+    """If user is authenticated show him a profile page
+    else start page"""
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        usr = self.request.user.id
+        if usr is not None:
+            context['context'] = Investment.objects.filter(investor=usr)
+            context['investor'] = Investor.objects.get(investor=usr)
+            return context
+        else:
+            return redirect('index')
 
 
-def back_view(request, pk):
+class AddView(CreateView):
+    """Class add investment to DB from special form"""
+    template_name = 'add.html'
+    form_class = InvestmentForm
+    success_url = reverse_lazy('profile')
+
+    def form_valid(self, form):
+        form.instance.investor = self.request.user
+        inv = Investment()
+        inv.i_type = form.cleaned_data['i_type']
+        inv.interval = form.cleaned_data['interval']
+        inv.amount = form.cleaned_data['amount']
+        inv.percent = form.cleaned_data['percent']
+        inv.save()
+        inv.save_inv()
+        return super(AddView, self).form_valid(form)
+
+
+class BackView(UpdateView):
     """Function changes status of investment if it closed,
     from special form """
-    if request.method == 'POST':
-        form = BackForm(request.POST)
-        if form.is_valid():
-            inv = Investment.objects.get(pk=pk)
-            inv.back = form.cleaned_data['back']
-            inv.status = form.cleaned_data['status']
-            inv.save()
-            inv.back_inv()
-            return redirect('profile')
-    else:
-        form = BackForm
-    return render(request, 'back.html', {'form': form})
+    template_name = 'back.html'
+    form_class = BackForm
+    model = Investment
+    success_url = reverse_lazy('profile')
+
+    def form_valid(self, form):
+        inv = Investment.objects.get(pk=self.object.pk)
+        inv.back = form.cleaned_data['back']
+        inv.status = form.cleaned_data['status']
+        inv.save()
+        inv.back_inv()
+        return super(BackView, self).form_valid(form)
+
+
+class DelView(DeleteView):
+    """Delete investment by the user"""
+    model = Investment
+    success_url = reverse_lazy('profile')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        inv = Investment.objects.get(pk=self.object.pk)
+        inv.cancel_inv()
+        inv.delete()
+        return context
 
 
 class AccountUpdateView(UpdateView):
