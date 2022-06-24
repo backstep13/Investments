@@ -13,25 +13,11 @@ from .models import Investment, Investor
 from .serializers import InvestmentSerializer
 
 
-class Index(TemplateView):
-    """Start page"""
-    template_name = 'index.html'
-
-
-def register(request):
-    """User Registration"""
-    user_form = UserRegistrationForm(request.POST)
-
-    if user_form.is_valid():
-        new_user = user_form.save(commit=False)
-        new_user.set_password(user_form.cleaned_data['password'])
-        new_user.save()
-        user = User.objects.get(username=user_form.cleaned_data['username'])
-        Investor.objects.create(investor=user)
-        return render(request, "registration/register_done.html", {'new_user': new_user})
-    else:
-        user_form = UserRegistrationForm()
-    return render(request, "registration/register.html", {'user_form': user_form})
+class SignUp(CreateView):
+    """Registration of users"""
+    form_class = UserRegistrationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/register.html'
 
 
 class Profile(TemplateView):

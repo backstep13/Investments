@@ -26,20 +26,17 @@ INSTALLED_APPS = [
     'button.apps.ButtonConfig',
     'articles.apps.ArticlesConfig',
     'django_unicorn',
-    'rest_framework',
-    'debug_toolbar'
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'reactive.urls'
@@ -137,7 +134,3 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     )
 }
-
-INTERNAL_IPS = [
-    '127.0.0.1',
-]

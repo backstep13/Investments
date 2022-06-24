@@ -1,21 +1,21 @@
-<!DOCTYPE html>
-<html>
-
-	<head>
-		<title>Регистрация</title>
-	</head>
-	
-	<body>
-		
-		<h3>Введите данные</h3>
+{% extends 'basic.html' %}
+{% block title %}
+InvestmentClub - Login
+{% endblock %}
+{% block content %}
+<div id="page-content">
+	<section class="breadcrumb">
+		<div class="container">
+			<h2>SignUp</h2>
+		</div>
+	</section>
+	<div class="container">
 		<div>
 			<form method="post">
 			{% csrf_token %}
-			{{ user_form.as_p }}
-			<input type="submit" value="Зарегистрироватся">
+			{{ form.as_p }}
+			<input type="submit" value="Register" class="btn-default">
 			</form>	
 		</div>
-
-	</body>
-	
-</html>
+	</div>
+	{% endblock %}
